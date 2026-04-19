@@ -1,6 +1,6 @@
 # Nocturne
 
-A midnight-themed web proxy.
+A scramjet based web proxy
 
 Built on the Mercury Workshop stack:
 
