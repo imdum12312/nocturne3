@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-69T9E59SM7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-69T9E59SM7');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <title>Nocturne · Privacy Policy</title>
+    <style>html,body{background:#05060d;color:#eae6ff;margin:0}</style>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23c9c1ff'/><circle cx='22' cy='14' r='11' fill='%23050610'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/css/global.css">
+    <style>
+        html, body { height: auto; overflow: auto; }
+        body { overflow-y: auto; }
+        .doc-wrap { max-width: 780px; margin: 0 auto; padding: 48px 32px 120px; position: relative; z-index: 2; }
+        .doc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 36px; opacity: 0; animation: slideDown 0.5s var(--ease) forwards; }
+        .doc-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; color: var(--fg); }
+        .doc-sub { font-size: 12px; color: var(--fg-3); margin-top: 4px; }
+        .back { color: var(--fg-3); font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color 0.15s var(--ease), transform 0.15s var(--ease); }
+        .back:hover { color: var(--fg); transform: translateX(-2px); }
+        .doc-body { opacity: 0; animation: slideUp 0.55s var(--ease) 0.12s forwards; }
+        h2 { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-3); margin: 30px 0 10px; font-weight: 500; }
+        p, li { font-size: 13.5px; line-height: 1.68; color: var(--fg-2); }
+        p + p { margin-top: 10px; }
+        ul { padding-left: 20px; margin: 8px 0; }
+        li { margin: 3px 0; }
+        strong { color: var(--fg); font-weight: 500; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--fg); }
+        .meta { font-size: 11px; color: var(--fg-3); margin-top: 48px; text-align: center; letter-spacing: 0.04em; }
+    </style>
+</head>
+<body>
+
+<canvas id="bgCanvas" class="visible"></canvas>
+
+<div class="doc-wrap">
+    <div class="doc-head">
+        <div>
+            <div class="doc-title">Privacy Policy</div>
+            <div class="doc-sub">Nocturne — web proxy</div>
+        </div>
+        <a href="/" class="back">← Home</a>
+    </div>
+
+    <div class="doc-body">
+        <p>This policy describes what Nocturne does and does not collect when you use the service.</p>
+
+        <h2>What We Don't Collect</h2>
+        <ul>
+            <li>The content of proxied pages or your search queries.</li>
+            <li>Account information — Nocturne has no accounts or sign-ups.</li>
+            <li>Passwords or form data you submit through the proxy.</li>
+        </ul>
+
+        <h2>What's Stored Locally</h2>
+        <p>Nocturne stores the following in <strong>your browser</strong> (localStorage). None of this is transmitted to the server:</p>
+        <ul>
+            <li>Your chosen search engine, tab cloak, and UI preferences.</li>
+            <li>Editor content, filename, language, and preferences on the Code page.</li>
+            <li>AI chat history and API key on the Code page, if used.</li>
+        </ul>
+        <p>All local data is cleared when you clear your browser storage for this site.</p>
+
+        <h2>Server-Side Logs</h2>
+        <p>The server may retain standard connection logs (IP address, timestamp, request path) for a limited time for abuse prevention and debugging. These logs are <strong>not</strong> the content of proxied traffic — they are the same kind of logs any web server produces.</p>
+
+        <h2>IP Blacklisting</h2>
+        <p>If abuse is detected, the offending IP address may be permanently blocked from accessing Nocturne. See the <a href="/terms.html">Terms of Service</a> for the full policy.</p>
+
+        <h2>Analytics</h2>
+        <p>Nocturne uses <strong>Google Analytics</strong> on its shell pages (home, apps, code, legal) to understand basic usage — page views, country-level geography, and browser/device type. It does <strong>not</strong> track what you browse through the proxy. You can opt out with any standard tracker-blocker (uBlock Origin, Privacy Badger) or Firefox's Enhanced Tracking Protection.</p>
+
+        <h2>Third Parties</h2>
+        <p>Nocturne loads fonts from Google Fonts, the Monaco editor from jsDelivr CDN, and the analytics tag from Google Tag Manager. Those providers may see that your browser requested those assets.</p>
+
+        <h2>Contact</h2>
+        <p>For privacy questions or abuse reports, contact the operator on Discord: <strong>Midnightsweat</strong>.</p>
+
+        <p class="meta">Last updated: 2026-04-19</p>
+    </div>
+</div>
+
+<script src="/src/js/bg.js" defer></script>
+
+</body>
+</html>

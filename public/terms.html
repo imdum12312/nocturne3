@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-69T9E59SM7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-69T9E59SM7');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <title>Nocturne · Terms of Service</title>
+    <style>html,body{background:#05060d;color:#eae6ff;margin:0}</style>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23c9c1ff'/><circle cx='22' cy='14' r='11' fill='%23050610'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/css/global.css">
+    <style>
+        html, body { height: auto; overflow: auto; }
+        body { overflow-y: auto; }
+        .doc-wrap { max-width: 780px; margin: 0 auto; padding: 48px 32px 120px; position: relative; z-index: 2; }
+        .doc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 36px; opacity: 0; animation: slideDown 0.5s var(--ease) forwards; }
+        .doc-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; color: var(--fg); }
+        .doc-sub { font-size: 12px; color: var(--fg-3); margin-top: 4px; }
+        .back { color: var(--fg-3); font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color 0.15s var(--ease), transform 0.15s var(--ease); }
+        .back:hover { color: var(--fg); transform: translateX(-2px); }
+        .doc-body { opacity: 0; animation: slideUp 0.55s var(--ease) 0.12s forwards; }
+        h2 { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-3); margin: 30px 0 10px; font-weight: 500; }
+        p, li { font-size: 13.5px; line-height: 1.68; color: var(--fg-2); }
+        p + p { margin-top: 10px; }
+        ul { padding-left: 20px; margin: 8px 0; }
+        li { margin: 3px 0; }
+        strong { color: var(--fg); font-weight: 500; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--fg); }
+        .warn { border-left: 2px solid #e07cb8; padding: 10px 14px; background: rgba(224, 124, 184, 0.04); margin: 20px 0; border-radius: 0 6px 6px 0; font-size: 13px; }
+        .meta { font-size: 11px; color: var(--fg-3); margin-top: 48px; text-align: center; letter-spacing: 0.04em; }
+    </style>
+</head>
+<body>
+
+<canvas id="bgCanvas" class="visible"></canvas>
+
+<div class="doc-wrap">
+    <div class="doc-head">
+        <div>
+            <div class="doc-title">Terms of Service</div>
+            <div class="doc-sub">Nocturne — web proxy</div>
+        </div>
+        <a href="/" class="back">← Home</a>
+    </div>
+
+    <div class="doc-body">
+        <p>By using Nocturne you agree to the following terms. If you do not agree, stop using the service immediately.</p>
+
+        <h2>1. Acceptable Use</h2>
+        <p>Nocturne is a web proxy intended for personal, lawful browsing. You agree <strong>not</strong> to use this service to:</p>
+        <ul>
+            <li>Access or distribute illegal content — including CSAM, pirated material, or stolen data.</li>
+            <li>Conduct phishing, malware distribution, fraud, or identity theft.</li>
+            <li>Launch denial-of-service attacks or perform unauthorized scanning.</li>
+            <li>Violate any law in your jurisdiction or the operator's jurisdiction.</li>
+            <li>Bypass age verification on adult-content platforms.</li>
+            <li>Purchase or facilitate the purchase of controlled substances.</li>
+            <li>Harass, threaten, or defame any person or group.</li>
+        </ul>
+
+        <div class="warn">
+            <strong>Enforcement.</strong> Any IP address found using Nocturne for illegal activity may be <strong>permanently blacklisted</strong> from this service without warning. Serious violations will be reported to your ISP and to relevant law-enforcement authorities.
+        </div>
+
+        <h2>2. Content Filtering</h2>
+        <p>Certain categories of sites and search terms are blocked at the client level — including adult content and illicit-drug-related queries. Attempting to circumvent these filters is itself a violation of these Terms and may result in an IP blacklist.</p>
+
+        <h2>3. No Warranty</h2>
+        <p>Nocturne is provided "as is" with no warranty of uptime, performance, or fitness for any particular purpose. The operator may terminate, modify, or suspend the service at any time without notice.</p>
+
+        <h2>4. Your Responsibility</h2>
+        <p>You are solely responsible for all activity conducted through Nocturne. The operator is not liable for damages arising from your use of the service or from your access to any third-party site via the proxy.</p>
+
+        <h2>5. Changes</h2>
+        <p>These Terms may be updated without notice. Continued use of Nocturne after changes take effect constitutes acceptance of the revised Terms.</p>
+
+        <h2>6. Contact</h2>
+        <p>For abuse reports, takedown requests, or questions about these Terms, contact the operator on Discord: <strong>Midnightsweat</strong>.</p>
+
+        <p>See also: <a href="/privacy.html">Privacy Policy</a> · <a href="/dmca.html">DMCA Policy</a>.</p>
+
+        <p class="meta">Last updated: 2026-04-19</p>
+    </div>
+</div>
+
+<script src="/src/js/bg.js" defer></script>
+
+</body>
+</html>
