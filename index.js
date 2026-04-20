@@ -84,9 +84,10 @@ app.use((req, res) => {
 
 const server = http.createServer(app);
 
-// Route websocket upgrades into wisp. Strip cookies so upstreams don't
+// Route websocket upgrades into wisp on obfuscated path. Strip cookies so upstreams don't
 // see our session context leak through.
 server.on("upgrade", (request, socket, head) => {
+    if (request.url !== "/api/v1/stream") return;
     if (request.headers["cookie"]) delete request.headers["cookie"];
     wisp.routeRequest(request, socket, head);
 });
