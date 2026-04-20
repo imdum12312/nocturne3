@@ -1,15 +1,16 @@
-const WELCOME_KEY = "nocturne-welcome-shown";
+const WELCOME_KEY = "nocturne-welcome-shown-v1";
 
 export function initWelcome() {
     const welcomeBanner = document.getElementById("welcomeBanner");
-    const closeBtn = document.querySelector(".welcome-close");
+    const okBtn = document.querySelector(".welcome-ok-btn");
 
-    if (!welcomeBanner || !closeBtn) return;
+    if (!welcomeBanner || !okBtn) return;
 
     const hasShownWelcome = localStorage.getItem(WELCOME_KEY) === "true";
 
     if (hasShownWelcome) {
         welcomeBanner.classList.add("hidden");
+        return;
     }
 
     function closeWelcome() {
@@ -20,8 +21,5 @@ export function initWelcome() {
         }, 300);
     }
 
-    closeBtn.addEventListener("click", closeWelcome);
-    welcomeBanner.addEventListener("click", (e) => {
-        if (e.target === welcomeBanner) closeWelcome();
-    });
+    okBtn.addEventListener("click", closeWelcome);
 }
