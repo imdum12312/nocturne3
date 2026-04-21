@@ -468,7 +468,8 @@
 
     <script>
         const API_URL = 'https://raw.githubusercontent.com/gn-math/assets/main/zones.json';
-        const GAMES_URL = 'https://html5.gn-math.dev';
+        const COVER_URL = 'https://cdn.jsdelivr.net/gh/gn-math/covers@main';
+        const HTML_URL = 'https://cdn.jsdelivr.net/gh/gn-math/html@main';
         let allGames = [];
         let filteredGames = [];
         let favorites = JSON.parse(localStorage.getItem('gameFavorites') || '[]');
@@ -479,6 +480,11 @@
                 const response = await fetch(API_URL);
                 if (!response.ok) throw new Error('Failed to load games');
                 allGames = await response.json();
+                allGames = allGames.map(game => ({
+                    ...game,
+                    cover: game.cover.replace('{COVER_URL}', COVER_URL),
+                    url: game.url.replace('{HTML_URL}', HTML_URL)
+                }));
                 filteredGames = [...allGames];
                 renderGames();
             } catch (error) {
@@ -545,9 +551,8 @@
             const game = allGames.find(g => g.id === gameId);
             if (!game) return;
 
-            const gameUrl = game.url.startsWith('http') ? game.url : `${GAMES_URL}${game.url}`;
             document.getElementById('gameViewer').classList.add('visible');
-            document.getElementById('gameFrame').src = gameUrl;
+            document.getElementById('gameFrame').src = game.url;
             document.getElementById('homeBtn').classList.add('visible');
 
             addToTaskbar(game);
