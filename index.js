@@ -51,7 +51,51 @@ app.get("/api/games", (req, res) => {
 });
 
 app.post("/api/games/play", (req, res) => {
-    res.json({ success: true });
+    const { gameId, timestamp } = req.body;
+    res.json({ success: true, message: "Play logged" });
+});
+
+app.post("/api/games/favorite", (req, res) => {
+    const { userId, gameId, isFavorite } = req.body;
+    res.json({ success: true, message: isFavorite ? "Added to favorites" : "Removed from favorites" });
+});
+
+app.post("/api/games/rating", (req, res) => {
+    const { userId, gameId, rating, review } = req.body;
+    res.json({ success: true, message: "Rating submitted" });
+});
+
+app.get("/api/collections", (req, res) => {
+    const { userId } = req.query;
+    res.json([
+        { id: '1', name: 'Favorites', gameIds: [] },
+        { id: '2', name: 'Action Games', gameIds: [] }
+    ]);
+});
+
+app.post("/api/collections", (req, res) => {
+    const { userId, name, gameIds } = req.body;
+    res.json({ success: true, collectionId: Date.now().toString(), message: "Collection created" });
+});
+
+app.post("/api/collections/:collectionId/games", (req, res) => {
+    const { gameId } = req.body;
+    res.json({ success: true, message: "Game added to collection" });
+});
+
+app.get("/api/games/leaderboard", (req, res) => {
+    res.json({
+        topPlayers: [
+            { userId: 'user_1', totalPlays: 150, gamesPlayed: 42 },
+            { userId: 'user_2', totalPlays: 120, gamesPlayed: 38 },
+            { userId: 'user_3', totalPlays: 95, gamesPlayed: 35 }
+        ],
+        topRatedGames: [
+            { gameId: 1, rating: 4.8, reviews: 42 },
+            { gameId: 2, rating: 4.6, reviews: 38 },
+            { gameId: 3, rating: 4.5, reviews: 35 }
+        ]
+    });
 });
 
 app.get("/api/games/export", (req, res) => {

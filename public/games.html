@@ -249,6 +249,60 @@
             margin-top: auto;
         }
 
+        .favorite-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            z-index: 10;
+        }
+
+        .favorite-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+            color: #fbbf24;
+            transform: scale(1.1);
+        }
+
+        .favorite-btn.active {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.2);
+        }
+
+        .context-menu {
+            position: fixed;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 5000;
+            min-width: 200px;
+        }
+
+        .context-menu-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+            border-bottom: 1px solid var(--line);
+            font-size: 0.9rem;
+        }
+
+        .context-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .context-menu-item:hover {
+            background: rgba(200, 195, 230, 0.1);
+            color: var(--primary);
+        }
+
         .stat-dot {
             width: 4px;
             height: 4px;
@@ -547,6 +601,14 @@
         const API_URL = window.sadjgknsdfjg || 'http://localhost:8080';
         let allGames = [];
         let favorites = JSON.parse(localStorage.getItem('gameFavorites') || '[]');
+        let playHistory = JSON.parse(localStorage.getItem('gameHistory') || '[]');
+        let userId = localStorage.getItem('userId') || generateUserId();
+
+        function generateUserId() {
+            const id = 'user_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('userId', id);
+            return id;
+        }
 
         async function loadGames() {
             try {
@@ -574,18 +636,31 @@
 
         function renderGames(games) {
             const grid = document.getElementById('gamesGrid');
-            grid.innerHTML = games.map(game => `
-                <div class="game-card" onclick="playGame(${game.id})">
-                    <img src="${game.cover}" alt="${game.name}" class="game-thumbnail">
-                    <div class="game-info">
-                        <div class="game-title">${game.name}</div>
-                        <div class="game-stats">
-                            <span class="stat-dot"></span>
-                            <span>Click to play</span>
+            grid.innerHTML = games.map(game => {
+                const isFavorite = favorites.includes(game.id);
+                const rating = game.rating || 0;
+                const plays = game.totalPlays || 0;
+                return `
+                    <div class="game-card" oncontextmenu="showGameMenu(event, ${game.id})">
+                        <div style="position: relative;">
+                            <img src="${game.cover}" alt="${game.name}" class="game-thumbnail" onclick="playGame(${game.id})">
+                            <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(event, ${game.id})" title="Add to favorites">
+                                ★
+                            </button>
+                        </div>
+                        <div class="game-info">
+                            <div class="game-title">${game.name}</div>
+                            <div style="font-size: 0.7rem; color: var(--fg-3); margin-bottom: 0.5rem;">
+                                ⭐ ${rating.toFixed(1)} | 👥 ${plays.toLocaleString()} plays
+                            </div>
+                            <div class="game-stats">
+                                <span class="stat-dot"></span>
+                                <span onclick="playGame(${game.id})" style="cursor: pointer;">Click to play</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function filterGames() {
@@ -600,9 +675,68 @@
 
             document.getElementById('gameViewer').classList.add('visible');
             document.getElementById('gameFrame').src = game.url;
+            document.getElementById('homeBtn').classList.add('visible');
 
             addToTaskbar(game);
             savePlayHistory(gameId);
+            updateURL(gameId);
+        }
+
+        function updateURL(gameId) {
+            const url = new URL(window.location);
+            url.searchParams.set('play', gameId);
+            history.pushState(null, '', url.toString());
+        }
+
+        function getShareLink(gameId) {
+            const url = new URL(window.location.origin + window.location.pathname);
+            url.searchParams.set('share', 'game:' + gameId);
+            return url.toString();
+        }
+
+        function toggleFavorite(event, gameId) {
+            event.stopPropagation();
+            const index = favorites.indexOf(gameId);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(gameId);
+            }
+            localStorage.setItem('gameFavorites', JSON.stringify(favorites));
+            syncFavoritesToServer(gameId, index === -1);
+            renderGames(allGames);
+        }
+
+        function showGameMenu(event, gameId) {
+            event.preventDefault();
+            const game = allGames.find(g => g.id === gameId);
+            if (!game) return;
+
+            const menu = document.createElement('div');
+            menu.className = 'context-menu';
+            menu.style.top = event.clientY + 'px';
+            menu.style.left = event.clientX + 'px';
+
+            const items = [
+                { text: 'Play Game', action: () => playGame(gameId) },
+                { text: 'Copy Share Link', action: () => copyToClipboard(getShareLink(gameId)) },
+                { text: 'Add to Collection', action: () => showCollectionModal(gameId) },
+                { text: 'Rate Game', action: () => showRatingModal(gameId) },
+                { text: 'View Stats', action: () => showGameStats(gameId) }
+            ];
+
+            menu.innerHTML = items.map(item =>
+                `<div class="context-menu-item" onclick="${item.action.toString()}">${item.text}</div>`
+            ).join('');
+
+            document.body.appendChild(menu);
+            setTimeout(() => document.removeEventListener('click', () => menu.remove()), 0);
+            document.addEventListener('click', () => menu.remove(), { once: true });
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            alert('Share link copied!');
         }
 
         function closeGame() {
@@ -642,6 +776,162 @@
             } catch (error) {
                 console.error('Error saving play history:', error);
             }
+        }
+
+        async function syncFavoritesToServer(gameId, isFavorite) {
+            try {
+                await fetch('/api/games/favorite', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, gameId, isFavorite })
+                });
+            } catch (error) {
+                console.error('Error syncing favorite:', error);
+            }
+        }
+
+        function showCollectionModal(gameId) {
+            const game = allGames.find(g => g.id === gameId);
+            document.getElementById('modalTitle').textContent = `Add "${game.name}" to Collection`;
+            document.getElementById('modalContent').innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" id="collectionName" placeholder="New Collection" style="width: 100%; padding: 0.75rem; background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px; color: var(--fg); margin-bottom: 0.5rem;">
+                    <button class="btn" onclick="createCollection(${gameId})" style="width: 100%;">Create & Add</button>
+                </div>
+                <div>
+                    <p style="font-size: 0.85rem; margin-bottom: 0.75rem; color: var(--fg-3);">Or add to existing:</p>
+                    <div id="existingCollections"></div>
+                </div>
+            `;
+            loadCollections(gameId);
+            document.getElementById('modalOverlay').classList.add('visible');
+        }
+
+        async function loadCollections(gameId) {
+            try {
+                const response = await fetch(`/api/collections?userId=${userId}`);
+                const collections = await response.json();
+                const container = document.getElementById('existingCollections');
+                container.innerHTML = collections.map(col =>
+                    `<div class="context-menu-item" onclick="addToCollection(${gameId}, '${col.id}')" style="border: none; margin-bottom: 0.5rem; padding: 0.5rem;">${col.name}</div>`
+                ).join('');
+            } catch (error) {
+                console.error('Error loading collections:', error);
+            }
+        }
+
+        async function createCollection(gameId) {
+            const name = document.getElementById('collectionName').value;
+            if (!name.trim()) return alert('Collection name required');
+
+            try {
+                await fetch('/api/collections', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, name, gameIds: [gameId] })
+                });
+                alert('Collection created!');
+                closeModal();
+            } catch (error) {
+                alert('Failed to create collection');
+            }
+        }
+
+        async function addToCollection(gameId, collectionId) {
+            try {
+                await fetch(`/api/collections/${collectionId}/games`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ gameId })
+                });
+                alert('Added to collection!');
+                closeModal();
+            } catch (error) {
+                alert('Failed to add to collection');
+            }
+        }
+
+        function showRatingModal(gameId) {
+            const game = allGames.find(g => g.id === gameId);
+            document.getElementById('modalTitle').textContent = `Rate "${game.name}"`;
+            document.getElementById('modalContent').innerHTML = `
+                <div style="text-align: center; padding: 1rem 0;">
+                    <div id="starRating" style="font-size: 3rem; margin: 1rem 0; letter-spacing: 0.5rem; cursor: pointer;">
+                        ${'☆ '.repeat(5)}
+                    </div>
+                    <textarea id="reviewText" placeholder="Write your review (optional)" style="width: 100%; height: 100px; padding: 0.75rem; background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px; color: var(--fg); font-family: inherit; margin: 1rem 0;"></textarea>
+                    <button class="btn" onclick="submitRating(${gameId})" style="width: 100%;">Submit Rating</button>
+                </div>
+            `;
+
+            let selectedRating = 0;
+            const stars = document.getElementById('starRating');
+            stars.addEventListener('click', (e) => {
+                const index = e.target.textContent.length / 2;
+                selectedRating = Math.floor(index / 2) + 1;
+                stars.textContent = '★ '.repeat(selectedRating) + '☆ '.repeat(5 - selectedRating);
+                window.currentRating = selectedRating;
+            });
+
+            document.getElementById('modalOverlay').classList.add('visible');
+        }
+
+        async function submitRating(gameId) {
+            const rating = window.currentRating || 0;
+            const review = document.getElementById('reviewText').value;
+
+            if (rating === 0) return alert('Please select a rating');
+
+            try {
+                await fetch('/api/games/rating', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, gameId, rating, review })
+                });
+                alert('Rating submitted!');
+                closeModal();
+            } catch (error) {
+                alert('Failed to submit rating');
+            }
+        }
+
+        function showGameStats(gameId) {
+            const game = allGames.find(g => g.id === gameId);
+            document.getElementById('modalTitle').textContent = `${game.name} - Stats`;
+            document.getElementById('modalContent').innerHTML = `
+                <div style="color: var(--fg-2);">
+                    <div style="margin: 1rem 0;">
+                        <strong>⭐ Average Rating:</strong> ${game.rating?.toFixed(1) || 'No ratings'} / 5
+                    </div>
+                    <div style="margin: 1rem 0;">
+                        <strong>👥 Total Plays:</strong> ${game.totalPlays?.toLocaleString() || 0}
+                    </div>
+                    <div style="margin: 1rem 0;">
+                        <strong>⏱️ Your Play Time:</strong> ${getPlayTime(gameId)}
+                    </div>
+                    <div style="margin: 1rem 0;">
+                        <strong>📊 Your Rating:</strong> ${getMyRating(gameId)}
+                    </div>
+                    <button class="btn" onclick="shareStats(${gameId})" style="width: 100%; margin-top: 1.5rem;">Share Stats</button>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('visible');
+        }
+
+        function getPlayTime(gameId) {
+            const plays = playHistory.filter(p => p.gameId === gameId);
+            return `${plays.length} time(s)`;
+        }
+
+        function getMyRating(gameId) {
+            const userPlay = playHistory.find(p => p.gameId === gameId && p.rating);
+            return userPlay?.rating ? `${userPlay.rating}/5` : 'Not rated';
+        }
+
+        function shareStats(gameId) {
+            const game = allGames.find(g => g.id === gameId);
+            const statsText = `Check out my stats for ${game.name}! ${getShareLink(gameId)}`;
+            copyToClipboard(statsText);
         }
 
         function openSettings() {
