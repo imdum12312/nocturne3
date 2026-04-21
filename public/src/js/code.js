@@ -224,16 +224,31 @@ require(["vs/editor/editor.main"], () => {
     document.getElementById("btnShare").addEventListener("click", async () => {
         const code = editor.getValue();
         const lang = langSelect.value;
-        const enc = encodeShare(code, lang);
-        const url = `${location.origin}/code.html#c=${enc.c}&l=${enc.l}`;
         try {
+            const res = await fetch("/api/code", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content: code, language: lang })
+            });
+            if (!res.ok) throw new Error("Failed to share");
+            const data = await res.json();
+            const url = `${location.origin}${data.shareUrl}`;
             await navigator.clipboard.writeText(url);
             stStatus.textContent = "link copied";
             flashStatus();
             setTimeout(() => stStatus.textContent = "ready", 1500);
-        } catch {
-            history.replaceState(null, "", url);
-            stStatus.textContent = "link in address bar";
+        } catch (e) {
+            const enc = encodeShare(code, lang);
+            const url = `${location.origin}/code.html#c=${enc.c}&l=${enc.l}`;
+            try {
+                await navigator.clipboard.writeText(url);
+                stStatus.textContent = "link copied (local)";
+                flashStatus();
+                setTimeout(() => stStatus.textContent = "ready", 1500);
+            } catch {
+                history.replaceState(null, "", url);
+                stStatus.textContent = "link in address bar";
+            }
         }
     });
 
@@ -324,27 +339,33 @@ require(["vs/editor/editor.main"], () => {
         }
     });
 
-    if (hashPayload) {
-        editor.setValue(hashPayload.code);
-        setLang(hashPayload.lang);
-        updateStats();
-        saveNow();
-        history.replaceState(null, "", "/code.html");
-        stStatus.textContent = "loaded from link";
-        flashStatus();
-        editor.focus();
-    } else if (hasSavedCode) {
-        editor.setValue(savedValue);
-        updateStats();
-        editor.focus();
-    } else {
-        isTyping = true;
-        runTypingAnimation(editor, WELCOME).then(() => {
+    const initEditor = async () => {
+        let payload = hashPayload;
+        if (!payload) payload = await loadServerShare();
+
+        if (payload) {
+            editor.setValue(payload.code);
+            setLang(payload.lang);
+            updateStats();
+            saveNow();
+            history.replaceState(null, "", "/code.html");
+            stStatus.textContent = "loaded from link";
+            flashStatus();
+            editor.focus();
+        } else if (hasSavedCode) {
+            editor.setValue(savedValue);
+            updateStats();
+            editor.focus();
+        } else {
+            isTyping = true;
+            await runTypingAnimation(editor, WELCOME);
             isTyping = false;
             updateStats();
             editor.focus();
-        });
-    }
+        }
+    };
+
+    initEditor();
 });
 
 function detectLanguage(code) {
@@ -566,6 +587,20 @@ function parseShareHash() {
     const code = decodeShare(c);
     if (code === null) return null;
     return { code, lang: l || "javascript" };
+}
+
+async function loadServerShare() {
+    const params = new URLSearchParams(location.search);
+    const shareId = params.get("share");
+    if (!shareId) return null;
+    try {
+        const res = await fetch(`/api/code/${shareId}`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        return { code: data.content, lang: data.language || "javascript" };
+    } catch {
+        return null;
+    }
 }
 
 async function runTypingAnimation(editor, text) {

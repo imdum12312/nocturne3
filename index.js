@@ -107,6 +107,35 @@ app.get("/api/games/export", (req, res) => {
     res.json(data);
 });
 
+const codeSnippets = new Map();
+
+app.post("/api/code", (req, res) => {
+    const { content, language } = req.body;
+    if (!content || !language) return res.status(400).json({ error: "Content and language required" });
+
+    const codeId = Math.random().toString(36).substr(2, 9);
+    codeSnippets.set(codeId, {
+        content,
+        language,
+        timestamp: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    });
+
+    res.json({ success: true, codeId, shareUrl: `/code.html?share=${codeId}` });
+});
+
+app.get("/api/code/:codeId", (req, res) => {
+    const snippet = codeSnippets.get(req.params.codeId);
+    if (!snippet) return res.status(404).json({ error: "Code snippet not found" });
+
+    if (new Date() > new Date(snippet.expiresAt)) {
+        codeSnippets.delete(req.params.codeId);
+        return res.status(404).json({ error: "Code snippet expired" });
+    }
+
+    res.json(snippet);
+});
+
 app.use("/epoxy", express.static(path.join(__dirname, "node_modules/@mercuryworkshop/epoxy-transport/dist")));
 app.use("/baremux", express.static(path.join(__dirname, "node_modules/@mercuryworkshop/bare-mux/dist")));
 
