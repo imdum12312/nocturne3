@@ -36,8 +36,12 @@ const ENGINES = {
     startpage:  { label: "Startpage",  url: q => "https://www.startpage.com/do/search?q=" + encodeURIComponent(q) }
 };
 
+/* ⚠️⚠️⚠️ WARNING — DO NOT SCROLL DOWN ⚠️⚠️⚠️
+   THIS SECTION CONTAINS COMPREHENSIVE CONTENT FILTERING
+   INAPPROPRIATE, ADULT, AND PIRACY SITES ARE BLOCKED
+   ⚠️⚠️⚠️ WARNING — DO NOT SCROLL DOWN ⚠️⚠️⚠️ */
+
 const BLOCKED_DOMAINS = [
-    // Adult / porn — tube sites
     "pornhub.com", "xvideos.com", "xhamster.com", "youporn.com", "redtube.com",
     "spankbang.com", "xnxx.com", "xnxx2.com", "tnaflix.com", "brazzers.com",
     "onlyfans.com", "chaturbate.com", "stripchat.com", "bongacams.com",
@@ -51,25 +55,19 @@ const BLOCKED_DOMAINS = [
     "yourlust.com", "fux.com", "porntube.com", "pornone.com", "porn300.com",
     "yespornplease.com", "porndig.com", "tubegalore.com", "pornzog.com",
     "adultdeepfakes.com", "pornpics.com", "metart.com", "met-art.com",
-    // Cams / amateur
     "myfreecams.com", "camsoda.com", "flirt4free.com", "streamate.com",
     "imlive.com", "camster.com", "camwhores.tv", "thothub.tv", "fapello.com",
     "fapello.su", "fapello.is", "sxyprn.com",
-    // Trans / niche
     "ashemaletube.com", "tgtube.com", "shemale.xxx",
-    // JAV
     "javhd.com", "kissjav.com", "javhihi.com", "heyzo.com", "javfinder.com",
     "jav.guru", "javlibrary.com",
-    // Hentai / illustration
     "nhentai.net", "hentaihaven.org", "e-hentai.org", "exhentai.org",
     "rule34.xxx", "rule34.paheal.net", "simply-hentai.com", "hanime.tv",
     "hentaihand.com", "e621.net", "f95zone.to", "hentai2read.com",
     "hentaigasm.com", "gelbooru.com", "danbooru.donmai.us", "realbooru.com",
-    // Erotica / adult dating
     "literotica.com", "lushstories.com", "asstr.org",
     "adulttime.com", "adultfriendfinder.com", "ashleymadison.com",
     "seeking.com", "seekingarrangement.com",
-    // Piracy — streaming
     "fmovies.to", "fmovies.wtf", "fmoviesz.to", "123movies.net",
     "123moviesfree.net", "putlocker.sb", "putlockers.so",
     "gomovies.sx", "gomovies.to", "soap2day.to", "soap2day.rs", "soap2day.tf",
@@ -77,42 +75,34 @@ const BLOCKED_DOMAINS = [
     "9anime.to", "9anime.tv", "zoro.to", "aniwatch.to",
     "gogoanime.io", "gogoanime.tv", "gogoanime.so",
     "bflix.to", "dopebox.to", "lookmovie.io", "lookmovie2.to", "sflix.to",
-    // Piracy — torrents
     "thepiratebay.org", "thepiratebay.se", "1337x.to", "1337x.tw", "1337x.st",
     "rarbg.to", "rarbgprx.org", "yts.mx", "yts.rs", "yts.am",
     "limetorrents.com", "limetorrents.info", "torrentgalaxy.to",
     "fitgirl-repacks.site", "nyaa.si", "sukebei.nyaa.si",
     "kickasstorrents.to", "kickass.sx", "kat.cr", "extratorrent.cc",
     "eztv.re", "eztv.ag",
-    // Warez / cracks / piracy forums
     "cracked.to", "cracked.io", "nulled.to", "nulled.io", "warez-bb.org",
     "skidrow-games.net", "crackwatch.com",
-    // Gore / shock
     "bestgore.com", "documentingreality.com", "kaotic.com", "theync.com",
     "vidmax.com", "liveleak.com",
-    // Darknet markets
-    "silkroadmarket.org", "dreammarket.to", "darkfailllnkf4vf.onion"
+    "silkroadmarket.org", "dreammarket.to", "darkfailllnkf4vf.onion",
+    "4chan.org", "8kun.top", "kiwifarms.net", "rumble.com", "telegram.org"
 ];
 
 const BLOCKED_KEYWORDS = [
-    // Porn / sex generic
     "porn", "pornhub", "xvideos", "xhamster", "xnxx", "xxx", "nude", "nudes",
     "naked", "hentai", "nhentai", "porno", "pornographic", "sex",
-    // Sex acts / descriptors
     "blowjob", "handjob", "footjob", "deepthroat", "creampie", "cumshot",
     "gangbang", "bukkake", "bondage", "fetish",
-    // NSFW labels
     "milf", "gilf", "camgirl", "camboy", "camwhore", "escort", "prostitute",
     "hooker", "masturbation", "masturbate", "erotica", "erotic",
-    // Hard drugs
     "cocaine", "heroin", "fentanyl", "methamphetamine", "meth",
     "mdma", "ecstasy", "molly", "lsd", "dmt", "ketamine",
     "crystal meth", "crack cocaine",
-    // Piracy terms
     "pirate bay", "piratebay", "1337x", "yts.mx", "fmovies", "123movies",
     "warez", "nulled", "keygen", "serial key",
-    // Darknet
-    "silk road", "darknet market", "dark web market"
+    "silk road", "darknet market", "dark web market",
+    "neilkohlitest", "inappropriate", "adult content"
 ];
 
 function checkBlocked(input) {
