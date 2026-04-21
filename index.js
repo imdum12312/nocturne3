@@ -1,8 +1,3 @@
-// Nocturne — web proxy server
-// Express + Wisp over a single HTTP listener. Serves the static frontend,
-// the Scramjet/Epoxy/Bare-Mux bundles from node_modules, and routes
-// websocket upgrades into wisp-js for transport.
-
 import { server as wisp } from "@mercuryworkshop/wisp-js/server";
 import express from "express";
 import compression from "compression";
@@ -13,7 +8,6 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// wisp: allow private ranges so VPS containers and self-tests work
 wisp.options.allow_loopback_ips = true;
 wisp.options.allow_private_ips = true;
 
@@ -25,9 +19,6 @@ app.set("trust proxy", 1);
 app.use(compression({ level: 6, threshold: 1024 }));
 
 app.use((req, res, next) => {
-    // Chromium gets COEP/COOP so SharedArrayBuffer works (YouTube video player).
-    // Firefox is skipped — it enforces COEP + CORP on SW-generated responses too
-    // strictly, which breaks the scramjet iframe.
     const ua = req.headers["user-agent"] || "";
     const isFirefox = /firefox/i.test(ua);
     if (!isFirefox) {
@@ -47,8 +38,6 @@ app.use((req, res, next) => {
 
 app.get("/ping", (req, res) => res.status(204).end());
 
-// Seeds the client's AI key from server-side env. Client caches in localStorage
-// and the user can override via the settings panel.
 app.get("/api/ai-config", (req, res) => {
     res.json({ key: process.env.GEMINI_API_KEY || "" });
 });
@@ -67,8 +56,6 @@ app.use(express.static(path.join(__dirname, "public"), {
     }
 }));
 
-// SPA fallback. /scramjet/* means the service worker isn't controlling yet —
-// serve an HTML retry page that silently reloads once the SW claims the client.
 app.use((req, res) => {
     if (req.path.startsWith("/scramjet/")) {
         res.status(200).type("text/html").send(
@@ -84,8 +71,6 @@ app.use((req, res) => {
 
 const server = http.createServer(app);
 
-// Route websocket upgrades into wisp. Strip cookies so upstreams don't
-// see our session context leak through.
 server.on("upgrade", (request, socket, head) => {
     if (request.headers["cookie"]) delete request.headers["cookie"];
     wisp.routeRequest(request, socket, head);
