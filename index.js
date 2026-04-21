@@ -108,6 +108,68 @@ app.get("/api/games/export", (req, res) => {
 });
 
 const codeSnippets = new Map();
+const gameCache = new Map();
+
+app.get("/api/games/proxy/:gameId", async (req, res) => {
+    try {
+        const gameId = req.params.gameId;
+        const gameUrl = gameCache.get(gameId);
+        if (!gameUrl) return res.status(404).json({ error: "Game not found" });
+
+        const response = await fetch(gameUrl);
+        if (!response.ok) return res.status(404).json({ error: "Game not accessible" });
+
+        const contentType = response.headers.get("content-type");
+        res.setHeader("Content-Type", contentType || "text/html; charset=utf-8");
+        res.setHeader("X-Frame-Options", "ALLOW");
+        response.body.pipe(res);
+    } catch (error) {
+        res.status(500).json({ error: "Proxy error" });
+    }
+});
+
+app.get("/api/games/cover/:gameId", async (req, res) => {
+    try {
+        const gameId = req.params.gameId;
+        const coverUrl = gameCache.get(`cover_${gameId}`);
+        if (!coverUrl) return res.status(404).json({ error: "Cover not found" });
+
+        const response = await fetch(coverUrl);
+        if (!response.ok) return res.status(404).json({ error: "Cover not accessible" });
+
+        const contentType = response.headers.get("content-type");
+        res.setHeader("Content-Type", contentType || "image/png");
+        response.body.pipe(res);
+    } catch (error) {
+        res.status(500).json({ error: "Proxy error" });
+    }
+});
+
+app.get("/api/games/list", async (req, res) => {
+    try {
+        const response = await fetch("https://raw.githubusercontent.com/gn-math/assets/main/zones.json");
+        if (!response.ok) throw new Error("Failed to fetch games");
+        const games = await response.json();
+        const COVER_URL = "https://cdn.jsdelivr.net/gh/gn-math/covers@main";
+        const HTML_URL = "https://cdn.jsdelivr.net/gh/gn-math/html@main";
+
+        const processedGames = games.map(game => {
+            const gameUrl = game.url.replace("{HTML_URL}", HTML_URL);
+            const coverUrl = game.cover.replace("{COVER_URL}", COVER_URL);
+            gameCache.set(game.id, gameUrl);
+            gameCache.set(`cover_${game.id}`, coverUrl);
+            return {
+                ...game,
+                cover: `/api/games/cover/${game.id}`,
+                url: `/api/games/proxy/${game.id}`
+            };
+        });
+
+        res.json(processedGames);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to load games" });
+    }
+});
 
 app.post("/api/code", (req, res) => {
     const { content, language } = req.body;
