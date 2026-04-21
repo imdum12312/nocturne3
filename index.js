@@ -17,6 +17,8 @@ const PORT = process.env.PORT || 8080;
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 app.use(compression({ level: 6, threshold: 1024 }));
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
 app.use((req, res, next) => {
     const ua = req.headers["user-agent"] || "";
@@ -38,8 +40,71 @@ app.use((req, res, next) => {
 
 app.get("/ping", (req, res) => res.status(204).end());
 
-app.get("/api/ai-config", (req, res) => {
-    res.json({ key: process.env.GEMINI_API_KEY || "" });
+app.get("/api/games", (req, res) => {
+    const games = [
+        { id: 1, name: 'Flappy Bird', cover: 'https://via.placeholder.com/160x160?text=Flappy', url: '/games/flappy.html' },
+        { id: 2, name: 'Snake Game', cover: 'https://via.placeholder.com/160x160?text=Snake', url: '/games/snake.html' },
+        { id: 3, name: '2048', cover: 'https://via.placeholder.com/160x160?text=2048', url: '/games/2048.html' },
+        { id: 4, name: 'Pac-Man', cover: 'https://via.placeholder.com/160x160?text=Pacman', url: '/games/pacman.html' },
+        { id: 5, name: 'Tetris', cover: 'https://via.placeholder.com/160x160?text=Tetris', url: '/games/tetris.html' },
+        { id: 6, name: 'Mario', cover: 'https://via.placeholder.com/160x160?text=Mario', url: '/games/mario.html' }
+    ];
+    res.json(games);
+});
+
+app.post("/api/games/play", (req, res) => {
+    const { gameId, timestamp } = req.body;
+    res.json({ success: true, message: "Play logged" });
+});
+
+app.post("/api/games/favorite", (req, res) => {
+    const { userId, gameId, isFavorite } = req.body;
+    res.json({ success: true, message: isFavorite ? "Added to favorites" : "Removed from favorites" });
+});
+
+app.post("/api/games/rating", (req, res) => {
+    const { userId, gameId, rating, review } = req.body;
+    res.json({ success: true, message: "Rating submitted" });
+});
+
+app.get("/api/collections", (req, res) => {
+    const { userId } = req.query;
+    res.json([
+        { id: '1', name: 'Favorites', gameIds: [] },
+        { id: '2', name: 'Action Games', gameIds: [] }
+    ]);
+});
+
+app.post("/api/collections", (req, res) => {
+    const { userId, name, gameIds } = req.body;
+    res.json({ success: true, collectionId: Date.now().toString(), message: "Collection created" });
+});
+
+app.post("/api/collections/:collectionId/games", (req, res) => {
+    const { gameId } = req.body;
+    res.json({ success: true, message: "Game added to collection" });
+});
+
+app.get("/api/games/leaderboard", (req, res) => {
+    res.json({
+        topPlayers: [
+            { userId: 'user_1', totalPlays: 150, gamesPlayed: 42 },
+            { userId: 'user_2', totalPlays: 120, gamesPlayed: 38 },
+            { userId: 'user_3', totalPlays: 95, gamesPlayed: 35 }
+        ],
+        topRatedGames: [
+            { gameId: 1, rating: 4.8, reviews: 42 },
+            { gameId: 2, rating: 4.6, reviews: 38 },
+            { gameId: 3, rating: 4.5, reviews: 35 }
+        ]
+    });
+});
+
+app.get("/api/games/export", (req, res) => {
+    const data = { favorites: [], history: [], timestamp: new Date().toISOString() };
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', 'attachment; filename="games-export.json"');
+    res.json(data);
 });
 
 app.use("/epoxy", express.static(path.join(__dirname, "node_modules/@mercuryworkshop/epoxy-transport/dist")));
