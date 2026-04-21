@@ -38,8 +38,27 @@ app.use((req, res, next) => {
 
 app.get("/ping", (req, res) => res.status(204).end());
 
-app.get("/api/ai-config", (req, res) => {
-    res.json({ key: process.env.GEMINI_API_KEY || "" });
+app.get("/api/games", (req, res) => {
+    const games = [
+        { id: 1, name: 'Flappy Bird', cover: 'https://via.placeholder.com/160x160?text=Flappy', url: '/games/flappy.html' },
+        { id: 2, name: 'Snake Game', cover: 'https://via.placeholder.com/160x160?text=Snake', url: '/games/snake.html' },
+        { id: 3, name: '2048', cover: 'https://via.placeholder.com/160x160?text=2048', url: '/games/2048.html' },
+        { id: 4, name: 'Pac-Man', cover: 'https://via.placeholder.com/160x160?text=Pacman', url: '/games/pacman.html' },
+        { id: 5, name: 'Tetris', cover: 'https://via.placeholder.com/160x160?text=Tetris', url: '/games/tetris.html' },
+        { id: 6, name: 'Mario', cover: 'https://via.placeholder.com/160x160?text=Mario', url: '/games/mario.html' }
+    ];
+    res.json(games);
+});
+
+app.post("/api/games/play", (req, res) => {
+    res.json({ success: true });
+});
+
+app.get("/api/games/export", (req, res) => {
+    const data = { favorites: [], history: [], timestamp: new Date().toISOString() };
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', 'attachment; filename="games-export.json"');
+    res.json(data);
 });
 
 app.use("/epoxy", express.static(path.join(__dirname, "node_modules/@mercuryworkshop/epoxy-transport/dist")));

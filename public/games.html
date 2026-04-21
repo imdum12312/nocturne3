@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <title>Nocturne - Games</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23c9c1ff'/><circle cx='22' cy='14' r='11' fill='%23050610'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #05060d;
+            --bg-2: #0a0b14;
+            --panel: rgba(20, 22, 38, 0.55);
+            --line: rgba(200, 195, 230, 0.06);
+            --line-2: rgba(200, 195, 230, 0.11);
+            --line-3: rgba(200, 195, 230, 0.18);
+            --fg: #e8e5f4;
+            --fg-2: #a9a3c7;
+            --fg-3: #706b8f;
+            --dim: #3f3c5a;
+            --accent: #b8b0da;
+            --accent-2: #8a80b6;
+            --primary: #fc2651;
+            --primary-hover: #e91e47;
+            --ease: cubic-bezier(0.22, 0.72, 0.14, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--fg);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #mainContent {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        #homeBtn {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            width: 40px;
+            height: 40px;
+            background: rgba(200, 195, 230, 0.1);
+            border: 1px solid rgba(200, 195, 230, 0.2);
+            border-radius: 8px;
+            color: var(--fg);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s var(--ease);
+            z-index: 100;
+        }
+
+        #homeBtn:hover {
+            background: rgba(200, 195, 230, 0.2);
+            transform: translateY(-2px);
+        }
+
+        #homeBtn.visible {
+            display: flex;
+        }
+
+        .header {
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s var(--ease);
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-bar input:focus {
+            background: #fff;
+            color: var(--bg);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
+
+        .btn-icon:hover {
+            background: #fff;
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 8rem;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 2rem 0 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 6px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .game-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(252, 38, 81, 0.3);
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            background: var(--bg-2);
+        }
+
+        .game-info {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .game-stats {
+            font-size: 0.75rem;
+            color: var(--fg-3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .stat-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: linear-gradient(180deg, transparent 0%, var(--bg-2) 30%);
+            border-top: 1px solid var(--line);
+            display: flex;
+            align-items: flex-end;
+            padding: 0.75rem 1.5rem 1rem;
+            gap: 0.75rem;
+            overflow-x: auto;
+            z-index: 1000;
+            scrollbar-width: none;
+        }
+
+        .taskbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .taskbar-item {
+            width: 50px;
+            height: 50px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.3s var(--ease);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .taskbar-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .taskbar-item:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .taskbar-item.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(252, 38, 81, 0.4);
+        }
+
+        #gameViewer {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: none;
+            z-index: 2000;
+            flex-direction: column;
+        }
+
+        #gameViewer.visible {
+            display: flex;
+        }
+
+        #gameViewer iframe {
+            flex: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .modal-overlay.visible {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            color: var(--fg-2);
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .setting-label {
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 26px;
+            background: var(--bg-2);
+            border-radius: 13px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s var(--ease);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            transition: all 0.3s var(--ease);
+        }
+
+        .toggle-switch.active {
+            background: var(--primary);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(200, 195, 230, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(200, 195, 230, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-bar {
+                max-width: none;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 1rem;
+            }
+
+            .main {
+                padding: 1rem 1rem 8rem;
+            }
+
+            .taskbar {
+                height: 60px;
+            }
+
+            .taskbar-item {
+                width: 45px;
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="homeBtn" onclick="goHome()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-6h-6v6H5a2 2 0 0 1-2-2z"/>
+        </svg>
+    </button>
+
+    <div id="mainContent">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">Games</div>
+                <div class="search-bar">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search games..." oninput="filterGames()">
+                </div>
+                <div class="header-buttons">
+                    <button class="btn-icon" onclick="openSettings()" title="Settings">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="section-title">Featured Games</div>
+            <div class="games-grid" id="gamesGrid"></div>
+        </div>
+    </div>
+
+    <div class="taskbar" id="taskbar"></div>
+
+    <div id="gameViewer">
+        <button id="homeBtn" onclick="closeGame()" style="display: flex !important; position: fixed; top: 1rem; left: 1rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-6h-6v6H5a2 2 0 0 1-2-2z"/>
+            </svg>
+        </button>
+        <iframe id="gameFrame"></iframe>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Settings</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.sadjgknsdfjg || 'http://localhost:8080';
+        let allGames = [];
+        let favorites = JSON.parse(localStorage.getItem('gameFavorites') || '[]');
+
+        async function loadGames() {
+            try {
+                const response = await fetch('/api/games');
+                if (!response.ok) throw new Error('Failed to load games');
+                allGames = await response.json();
+                renderGames(allGames);
+            } catch (error) {
+                console.error('Error loading games:', error);
+                loadDefaultGames();
+            }
+        }
+
+        function loadDefaultGames() {
+            allGames = [
+                { id: 1, name: 'Flappy Bird', cover: 'https://via.placeholder.com/160x160?text=Flappy', url: '/games/flappy.html' },
+                { id: 2, name: 'Snake Game', cover: 'https://via.placeholder.com/160x160?text=Snake', url: '/games/snake.html' },
+                { id: 3, name: '2048', cover: 'https://via.placeholder.com/160x160?text=2048', url: '/games/2048.html' },
+                { id: 4, name: 'Pac-Man', cover: 'https://via.placeholder.com/160x160?text=Pacman', url: '/games/pacman.html' },
+                { id: 5, name: 'Tetris', cover: 'https://via.placeholder.com/160x160?text=Tetris', url: '/games/tetris.html' },
+                { id: 6, name: 'Mario', cover: 'https://via.placeholder.com/160x160?text=Mario', url: '/games/mario.html' },
+            ];
+            renderGames(allGames);
+        }
+
+        function renderGames(games) {
+            const grid = document.getElementById('gamesGrid');
+            grid.innerHTML = games.map(game => `
+                <div class="game-card" onclick="playGame(${game.id})">
+                    <img src="${game.cover}" alt="${game.name}" class="game-thumbnail">
+                    <div class="game-info">
+                        <div class="game-title">${game.name}</div>
+                        <div class="game-stats">
+                            <span class="stat-dot"></span>
+                            <span>Click to play</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterGames() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allGames.filter(g => g.name.toLowerCase().includes(query));
+            renderGames(filtered);
+        }
+
+        function playGame(gameId) {
+            const game = allGames.find(g => g.id === gameId);
+            if (!game) return;
+
+            document.getElementById('gameViewer').classList.add('visible');
+            document.getElementById('gameFrame').src = game.url;
+
+            addToTaskbar(game);
+            savePlayHistory(gameId);
+        }
+
+        function closeGame() {
+            document.getElementById('gameViewer').classList.remove('visible');
+            document.getElementById('gameFrame').src = '';
+            document.getElementById('homeBtn').classList.remove('visible');
+        }
+
+        function goHome() {
+            window.location.href = '/';
+        }
+
+        function addToTaskbar(game) {
+            let taskbar = document.getElementById('taskbar');
+            const existing = taskbar.querySelector(`[data-game-id="${game.id}"]`);
+
+            if (existing) {
+                existing.classList.add('active');
+                return;
+            }
+
+            const item = document.createElement('div');
+            item.className = 'taskbar-item active';
+            item.setAttribute('data-game-id', game.id);
+            item.innerHTML = `<img src="${game.cover}" alt="${game.name}">`;
+            item.onclick = () => playGame(game.id);
+            taskbar.appendChild(item);
+        }
+
+        async function savePlayHistory(gameId) {
+            try {
+                await fetch('/api/games/play', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ gameId, timestamp: new Date().toISOString() })
+                });
+            } catch (error) {
+                console.error('Error saving play history:', error);
+            }
+        }
+
+        function openSettings() {
+            document.getElementById('modalTitle').textContent = 'Game Settings';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="setting-row">
+                    <span class="setting-label">Graphics Quality</span>
+                    <select style="background: var(--bg-2); border: 1px solid var(--line); color: var(--fg); padding: 0.5rem; border-radius: 6px;">
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <span class="setting-label">Sound Effects</span>
+                    <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                </div>
+                <div class="setting-row">
+                    <span class="setting-label">Music</span>
+                    <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                </div>
+                <div class="setting-row">
+                    <span class="setting-label">Performance Mode</span>
+                    <div class="toggle-switch" onclick="this.classList.toggle('active')"></div>
+                </div>
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line);">
+                    <button class="btn" onclick="exportGameData()" style="width: 100%; margin-bottom: 0.75rem;">Export Game Data</button>
+                    <button class="btn" style="width: 100%; background: var(--dim);" onclick="clearGameData()">Clear Save Data</button>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('visible');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('visible');
+        }
+
+        async function exportGameData() {
+            try {
+                const response = await fetch('/api/games/export');
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `nocturne-games-${Date.now()}.json`;
+                a.click();
+            } catch (error) {
+                alert('Failed to export data');
+            }
+        }
+
+        function clearGameData() {
+            if (confirm('Clear all game save data? This cannot be undone.')) {
+                localStorage.removeItem('gameFavorites');
+                localStorage.removeItem('gameHistory');
+                alert('Game data cleared');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadGames);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('gameViewer').classList.contains('visible')) {
+                closeGame();
+            }
+        });
+    </script>
+</body>
+</html>
