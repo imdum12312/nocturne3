@@ -17,6 +17,8 @@ const PORT = process.env.PORT || 8080;
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 app.use(compression({ level: 6, threshold: 1024 }));
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
 app.use((req, res, next) => {
     const ua = req.headers["user-agent"] || "";
