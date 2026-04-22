@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23c9c1ff'/><circle cx='22' cy='14' r='11' fill='%23050610'/></svg>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="dark">
     <title>Nocturne - Games</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23c9c1ff'/><circle cx='22' cy='14' r='11' fill='%23050610'/></svg>">
+    <meta name="description" content="Play games on Nocturne. Unblocked games for school or home.">
+    <meta property="og:title" content="Nocturne Games">
+    <meta name="color-scheme" content="dark">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,13 +19,9 @@
             --panel: rgba(20, 22, 38, 0.55);
             --line: rgba(200, 195, 230, 0.06);
             --line-2: rgba(200, 195, 230, 0.11);
-            --line-3: rgba(200, 195, 230, 0.18);
             --fg: #e8e5f4;
             --fg-2: #a9a3c7;
             --fg-3: #706b8f;
-            --dim: #3f3c5a;
-            --accent: #b8b0da;
-            --accent-2: #8a80b6;
             --primary: #fc2651;
             --primary-hover: #e91e47;
             --ease: cubic-bezier(0.22, 0.72, 0.14, 1);
@@ -36,179 +34,193 @@
         }
 
         html, body {
-            height: 100%;
             background: var(--bg);
             color: var(--fg);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            overflow-x: hidden;
         }
 
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
+        header {
             background: linear-gradient(180deg, rgba(252, 38, 81, 0.1) 0%, transparent 100%);
             border-bottom: 1px solid var(--line);
-            padding: 2rem 1.5rem;
+            padding: 1.5rem;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .header-content {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 2rem;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            flex: 1;
+            gap: 1.5rem;
+            flex-wrap: wrap;
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #b8b0da 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            text-decoration: none;
             white-space: nowrap;
         }
 
-        .search-bar {
+        .search-container {
+            display: flex;
+            gap: 0.75rem;
             flex: 1;
-            max-width: 400px;
-            position: relative;
+            max-width: 500px;
         }
 
-        .search-bar input {
-            width: 100%;
-            padding: 0.65rem 1rem 0.65rem 2.5rem;
+        .search-container input {
+            flex: 1;
+            padding: 0.65rem 1rem;
             background: var(--bg-2);
             border: 1px solid var(--line-2);
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--fg);
             font-family: inherit;
-            font-size: 0.9rem;
             outline: none;
             transition: all 0.3s var(--ease);
         }
 
-        .search-bar input:focus {
+        .search-container input:focus {
             border-color: var(--primary);
             background: var(--bg-3);
             box-shadow: 0 0 0 3px rgba(252, 38, 81, 0.1);
         }
 
-        .search-bar input::placeholder {
+        .search-container input::placeholder {
             color: var(--fg-3);
         }
 
-        .search-icon {
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--fg-3);
-            pointer-events: none;
-            width: 16px;
-            height: 16px;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--panel);
+        .search-container select {
+            padding: 0.65rem 1rem;
+            background: var(--bg-2);
             border: 1px solid var(--line-2);
             border-radius: 6px;
-            color: var(--fg-2);
+            color: var(--fg);
+            font-family: inherit;
+            outline: none;
             cursor: pointer;
             transition: all 0.3s var(--ease);
         }
 
-        .btn-icon:hover {
+        .search-container select:hover,
+        .search-container select:focus {
             border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(252, 38, 81, 0.1);
+            background: var(--bg-3);
         }
 
-        #mainContent {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
+        .control-buttons {
+            display: flex;
+            gap: 0.75rem;
         }
 
-        .main {
-            max-width: 1400px;
+        .control-buttons button {
+            padding: 0.65rem 1.25rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
+
+        .control-buttons button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        main {
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem 1.5rem 8rem;
-            width: 100%;
         }
 
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 1rem;
+        details {
             margin-bottom: 2rem;
         }
 
-        .game-card {
+        summary {
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 1rem 0;
+            color: var(--fg);
+            transition: color 0.3s var(--ease);
+        }
+
+        summary:hover {
+            color: var(--primary);
+        }
+
+        details[open] summary {
+            margin-bottom: 1rem;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--line);
+            margin: 1.5rem 0;
+        }
+
+        .zone-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .zone-item {
             background: var(--panel);
             border: 1px solid var(--line);
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s var(--ease);
-            position: relative;
             display: flex;
             flex-direction: column;
-            height: 100%;
         }
 
-        .game-card:hover {
+        .zone-item:hover {
             transform: translateY(-6px);
             border-color: var(--primary);
             background: rgba(252, 38, 81, 0.08);
             box-shadow: 0 0 20px rgba(252, 38, 81, 0.2);
         }
 
-        .game-thumbnail {
+        .zone-img-wrapper {
             width: 100%;
             aspect-ratio: 1;
-            object-fit: cover;
+            overflow: hidden;
             background: var(--bg-3);
+        }
+
+        .zone-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             transition: transform 0.3s var(--ease);
         }
 
-        .game-card:hover .game-thumbnail {
+        .zone-item:hover img {
             transform: scale(1.05);
         }
 
-        .game-info {
+        .zone-info {
             padding: 0.75rem;
             flex: 1;
             display: flex;
             flex-direction: column;
         }
 
-        .game-title {
+        .zone-name {
             font-size: 0.8rem;
             font-weight: 600;
             color: var(--fg);
@@ -220,128 +232,107 @@
             margin-bottom: 0.5rem;
         }
 
-        .game-author {
+        .zone-author {
             font-size: 0.65rem;
             color: var(--fg-3);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            margin-bottom: auto;
+            margin-top: auto;
         }
 
-        .game-footer {
-            display: flex;
+        #popupOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
             align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-            font-size: 0.7rem;
-            color: var(--fg-3);
+            justify-content: center;
         }
 
-        .stat-dot {
-            width: 3px;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 50%;
+        #popupOverlay.show {
+            display: flex;
         }
 
-        .favorite-btn {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 28px;
-            height: 28px;
-            background: rgba(0, 0, 0, 0.7);
+        .popup {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+        }
+
+        .popup-header h3 {
+            color: #fff;
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        #popupClose {
+            background: transparent;
             border: none;
-            border-radius: 4px;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 1rem;
+            color: #fff;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s var(--ease);
-            z-index: 10;
+            line-height: 1;
         }
 
-        .favorite-btn:hover {
-            background: rgba(0, 0, 0, 0.9);
-            color: #fbbf24;
+        #popupClose:hover {
             transform: scale(1.1);
         }
 
-        .favorite-btn.active {
-            color: #fbbf24;
-            background: rgba(251, 191, 36, 0.2);
+        #popupBody {
+            padding: 1.5rem;
+            color: var(--fg-2);
         }
 
-        .taskbar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            background: linear-gradient(180deg, transparent 0%, var(--bg-2) 30%);
+        footer {
+            background: linear-gradient(180deg, transparent 0%, rgba(10, 11, 20, 0.5) 100%);
             border-top: 1px solid var(--line);
-            display: flex;
-            align-items: flex-end;
-            padding: 0.75rem 1.5rem 1rem;
-            gap: 0.75rem;
-            overflow-x: auto;
-            z-index: 1000;
-            scrollbar-width: none;
+            padding: 2rem 1.5rem;
+            margin-top: 4rem;
         }
 
-        .taskbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .taskbar-item {
-            width: 50px;
-            height: 50px;
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: 6px;
+        .footer-links {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
-            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
             justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: all 0.3s var(--ease);
-            overflow: hidden;
         }
 
-        .taskbar-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .footer-links a,
+        .footer-links label {
+            color: var(--fg-2);
+            text-decoration: none;
+            transition: color 0.3s var(--ease);
         }
 
-        .taskbar-item:hover {
-            border-color: var(--primary);
-            transform: scale(1.05);
+        .footer-links a:hover,
+        .footer-links label:hover {
+            color: var(--primary);
         }
 
-        .taskbar-item.active {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(252, 38, 81, 0.4);
-        }
-
-        #gameViewer {
-            position: fixed;
-            inset: 0;
-            background: #000;
+        #importData {
             display: none;
-            z-index: 2000;
-            flex-direction: column;
-        }
-
-        #gameViewer.visible {
-            display: flex;
-        }
-
-        #gameViewer iframe {
-            flex: 1;
-            border: none;
-            width: 100%;
-            height: 100%;
         }
 
         #homeBtn {
@@ -371,13 +362,28 @@
             display: flex;
         }
 
+        #gameViewer {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: none;
+            z-index: 2001;
+        }
+
+        #gameViewer.visible {
+            display: block;
+        }
+
+        #gameFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
         .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 400px;
+            text-align: center;
+            padding: 3rem 1rem;
             color: var(--fg-3);
-            font-size: 1rem;
         }
 
         ::-webkit-scrollbar {
@@ -401,24 +407,19 @@
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
-                gap: 1rem;
+                align-items: stretch;
             }
 
-            .header-left {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .search-bar {
+            .search-container {
                 max-width: none;
             }
 
-            .games-grid {
+            .zone-container {
                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
                 gap: 0.75rem;
             }
 
-            .main {
+            main {
                 padding: 1rem 1rem 8rem;
             }
         }
@@ -431,46 +432,57 @@
         </svg>
     </button>
 
-    <div class="header">
+    <header>
         <div class="header-content">
-            <div class="header-left">
-                <div class="logo">Games</div>
-                <div class="search-bar">
-                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-                    </svg>
-                    <input type="text" id="searchInput" placeholder="Search games..." oninput="filterGames()">
-                </div>
+            <a class="logo" href="/" style="text-decoration: none; color: inherit;">Nocturne</a>
+            <div class="search-container">
+                <input type="text" id="searchBar" placeholder="Search games..." oninput="filterZones()">
+                <select id="sortOptions" onchange="sortZones()">
+                    <option value="name">Name</option>
+                    <option value="id">Date Added</option>
+                </select>
             </div>
-            <div class="header-right">
-                <button class="btn-icon" onclick="toggleSort()" title="Sort">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 6h18M3 12h18M3 18h18"/>
-                    </svg>
-                </button>
+            <div class="control-buttons">
+                <button id="settings">Settings</button>
             </div>
         </div>
-    </div>
+    </header>
 
-    <div id="mainContent">
-        <div class="main">
-            <div id="gamesGrid" class="games-grid">
-                <div class="loading">Loading games...</div>
-            </div>
+    <main>
+        <details id="featuredZonesWrapper" open>
+            <summary>Featured</summary>
+            <div id="featuredZones" class="zone-container"></div>
+        </details>
+        <hr>
+        <details id="allZonesWrapper" open>
+            <summary>All Games</summary>
+            <div id="container" class="zone-container"><div class="loading">Loading games...</div></div>
+        </details>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#" onclick="showContact(); return false;">Contact</a>
+            <a href="#" onclick="loadPrivacy(); return false;">Privacy</a>
+            <a href="javascript:saveData()">Export</a>
+            <label for="importData">Import</label>
+            <input type="file" id="importData" onchange="loadData(event)">
         </div>
-    </div>
+    </footer>
 
-    <div class="taskbar" id="taskbar"></div>
-
-    <div id="gameViewer">
-        <iframe id="gameFrame"></iframe>
+    <div id="popupOverlay">
+        <div class="popup">
+            <div class="popup-header">
+                <h3 id="popupTitle">Details</h3>
+                <button id="popupClose" onclick="closePopup()">×</button>
+            </div>
+            <div id="popupBody"></div>
+        </div>
     </div>
 
     <script>
         let allGames = [];
         let filteredGames = [];
-        let favorites = JSON.parse(localStorage.getItem('gameFavorites') || '[]');
-        let sortBy = 'name';
 
         async function loadGames() {
             try {
@@ -481,41 +493,32 @@
                 renderGames();
             } catch (error) {
                 console.error('Error loading games:', error);
-                document.getElementById('gamesGrid').innerHTML = '<div class="loading">Failed to load games</div>';
+                document.getElementById('container').innerHTML = '<div class="loading">Failed to load games</div>';
             }
         }
 
         function renderGames() {
-            const grid = document.getElementById('gamesGrid');
+            const grid = document.getElementById('container');
             if (filteredGames.length === 0) {
                 grid.innerHTML = '<div class="loading">No games found</div>';
                 return;
             }
 
-            grid.innerHTML = filteredGames.map(game => {
-                const isFavorite = favorites.includes(game.id);
-                const authorName = game.author || 'Unknown';
-                return `
-                    <div class="game-card" onclick="playGame(${game.id})">
-                        <div style="position: relative;">
-                            <img src="${game.cover}" alt="${game.name}" class="game-thumbnail" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 160 160%22><rect fill=%22%230a0b14%22 width=%22160%22 height=%22160%22/><text x=%2280%22 y=%2280%22 text-anchor=%22middle%22 fill=%22%23706b8f%22 font-size=%2214%22>${game.name.substring(0, 10)}</text></svg>'">
-                            <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(event, ${game.id})" title="Add to favorites">★</button>
-                        </div>
-                        <div class="game-info">
-                            <div class="game-title">${game.name}</div>
-                            <div class="game-author">${authorName}</div>
-                            <div class="game-footer">
-                                <span class="stat-dot"></span>
-                                <span>Click to play</span>
-                            </div>
-                        </div>
+            grid.innerHTML = filteredGames.map(game => `
+                <div class="zone-item" onclick="playGame(${game.id})">
+                    <div class="zone-img-wrapper">
+                        <img src="${game.cover}" alt="${game.name}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 160 160%22><rect fill=%22%230a0b14%22 width=%22160%22 height=%22160%22/><text x=%2280%22 y=%2280%22 text-anchor=%22middle%22 fill=%22%23706b8f%22 font-size=%2214%22>${game.name.substring(0, 10)}</text></svg>'">
                     </div>
-                `;
-            }).join('');
+                    <div class="zone-info">
+                        <div class="zone-name">${game.name}</div>
+                        <div class="zone-author">${game.author || 'Unknown'}</div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function filterGames() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
+        function filterZones() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
             filteredGames = allGames.filter(g =>
                 g.name.toLowerCase().includes(query) ||
                 (g.author && g.author.toLowerCase().includes(query))
@@ -523,20 +526,15 @@
             renderGames();
         }
 
-        function toggleSort() {
-            const sorts = ['name', 'author', 'featured'];
-            const currentIndex = sorts.indexOf(sortBy);
-            sortBy = sorts[(currentIndex + 1) % sorts.length];
-
-            if (sortBy === 'name') {
+        function sortZones() {
+            const sortType = document.getElementById('sortOptions').value;
+            if (sortType === 'name') {
                 allGames.sort((a, b) => a.name.localeCompare(b.name));
-            } else if (sortBy === 'author') {
-                allGames.sort((a, b) => (a.author || '').localeCompare(b.author || ''));
-            } else if (sortBy === 'featured') {
-                allGames.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+            } else if (sortType === 'id') {
+                allGames.sort((a, b) => b.id - a.id);
             }
             filteredGames = [...allGames];
-            filterGames();
+            filterZones();
         }
 
         function playGame(gameId) {
@@ -546,63 +544,51 @@
             document.getElementById('gameViewer').classList.add('visible');
             document.getElementById('gameFrame').src = game.url;
             document.getElementById('homeBtn').classList.add('visible');
-
-            addToTaskbar(game);
-            updateURL(gameId);
-        }
-
-        function updateURL(gameId) {
-            const url = new URL(window.location);
-            url.searchParams.set('play', gameId);
-            history.pushState(null, '', url.toString());
-        }
-
-        function toggleFavorite(event, gameId) {
-            event.stopPropagation();
-            const index = favorites.indexOf(gameId);
-            if (index > -1) {
-                favorites.splice(index, 1);
-            } else {
-                favorites.push(gameId);
-            }
-            localStorage.setItem('gameFavorites', JSON.stringify(favorites));
-            renderGames();
-        }
-
-        function closeGame() {
-            document.getElementById('gameViewer').classList.remove('visible');
-            document.getElementById('gameFrame').src = '';
-            document.getElementById('homeBtn').classList.remove('visible');
-            history.replaceState(null, '', '/games.html');
         }
 
         function goHome() {
             window.location.href = '/';
         }
 
-        function addToTaskbar(game) {
-            let taskbar = document.getElementById('taskbar');
-            const existing = taskbar.querySelector(`[data-game-id="${game.id}"]`);
-
-            if (existing) {
-                existing.classList.add('active');
-                return;
-            }
-
-            const item = document.createElement('div');
-            item.className = 'taskbar-item active';
-            item.setAttribute('data-game-id', game.id);
-            item.innerHTML = `<img src="${game.cover}" alt="${game.name}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 50 50%22><rect fill=%22%230a0b14%22 width=%2250%22 height=%2250%22/></svg>'">`;
-            item.onclick = () => playGame(game.id);
-            taskbar.appendChild(item);
+        function closePopup() {
+            document.getElementById('popupOverlay').classList.remove('show');
         }
 
-        document.addEventListener('DOMContentLoaded', loadGames);
+        function showContact() {
+            document.getElementById('popupTitle').textContent = 'Contact';
+            document.getElementById('popupBody').innerHTML = '<p>Contact information goes here</p>';
+            document.getElementById('popupOverlay').classList.add('show');
+        }
+
+        function loadPrivacy() {
+            document.getElementById('popupTitle').textContent = 'Privacy Policy';
+            document.getElementById('popupBody').innerHTML = '<p>Privacy policy content goes here</p>';
+            document.getElementById('popupOverlay').classList.add('show');
+        }
+
+        function saveData() {
+            alert('Export data functionality');
+        }
+
+        function loadData(event) {
+            alert('Import data functionality');
+        }
+
+        document.getElementById('settings').addEventListener('click', () => {
+            document.getElementById('popupTitle').textContent = 'Settings';
+            document.getElementById('popupBody').innerHTML = '<p>Settings options go here</p>';
+            document.getElementById('popupOverlay').classList.add('show');
+        });
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && document.getElementById('gameViewer').classList.contains('visible')) {
-                closeGame();
+                document.getElementById('gameViewer').classList.remove('visible');
+                document.getElementById('gameFrame').src = '';
+                document.getElementById('homeBtn').classList.remove('visible');
             }
         });
+
+        document.addEventListener('DOMContentLoaded', loadGames);
     </script>
 </body>
 </html>
